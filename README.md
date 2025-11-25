@@ -1,5 +1,5 @@
-# Firebase Studio
+Projeto EM EXTREMA FASE DE DESENVOLVIMENTO Prezado por favor tenha paciencia.
 
-This is a NextJS starter in Firebase Studio.
-
-To get started, take a look at src/app/page.tsx.
+```
+npm install && npm run dev
+```
