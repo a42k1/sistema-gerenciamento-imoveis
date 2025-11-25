@@ -28,7 +28,6 @@ defineProps({
       <div class="text-2xl font-bold">
         {{ formatCurrency(receitaBrutaMensal) }}
       </div>
-      <p class="text-xs text-muted-foreground">+20.1% mês passado</p>
     </div>
 
     <div class="rounded-xl border bg-card text-card-foreground shadow p-6">
@@ -37,7 +36,6 @@ defineProps({
         <Users class="h-4 w-4 text-muted-foreground" />
       </div>
       <div class="text-2xl font-bold">{{ totalImoveis }}</div>
-      <p class="text-xs text-muted-foreground">+180 novos</p>
     </div>
 
     <div class="rounded-xl border bg-card text-card-foreground shadow p-6">
@@ -48,7 +46,6 @@ defineProps({
       <div class="text-2xl font-bold">
         {{ formatCurrency(receitaLiquidaMensal) }}
       </div>
-      <p class="text-xs text-muted-foreground">+201 desde a última hora</p>
     </div>
   </div>
 </template>
