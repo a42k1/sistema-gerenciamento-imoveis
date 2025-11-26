@@ -16,10 +16,12 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const activeCountRef = ref(0)
 
+// Carrega a quantidade de imóveis ativos (não estão 'Alugado') a partir do localStorage
+// Atualiza a referência reativa `activeCountRef` com o total
 const loadActiveCount = () => {
   try {
     const imoveis = JSON.parse(localStorage.getItem('imoveis') || '[]')
-    // Count imoveis where status !== 'Alugado' (or status empty -> available)
+    // Conta imóveis com status diferente de 'Alugado' (status vazio -> disponível)
     activeCountRef.value = imoveis.filter(i => { 
       const s = (i.status || '').toString().toLowerCase();
       return s !== 'alugado';
@@ -29,11 +31,13 @@ const loadActiveCount = () => {
   }
 }
 
+// Ao montar, carrega a contagem e registra listeners para manter a contagem sincronizada
 onMounted(() => {
   loadActiveCount()
   window.addEventListener('storage', loadActiveCount)
   window.addEventListener('focus', loadActiveCount)
 })
+// Ao desmontar, remove os listeners registrados
 onUnmounted(() => {
   window.removeEventListener('storage', loadActiveCount)
   window.removeEventListener('focus', loadActiveCount)

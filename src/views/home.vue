@@ -16,6 +16,8 @@ import Imovel from '@/components/Imovel.vue'
 
 const imoveis = ref([])
 
+// Carrega a lista de imóveis do localStorage e atualiza o estado "imoveis".
+// Se ocorrer erro, garante que "imoveis" fique como array vazio.
 const loadImoveis = () => {
   try {
     imoveis.value = JSON.parse(localStorage.getItem('imoveis') || '[]')

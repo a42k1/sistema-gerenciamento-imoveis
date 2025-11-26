@@ -16,6 +16,8 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const total = ref(0)
 
+// Carrega a soma (receita total) de todos os imóveis armazenados no localStorage
+// e atualiza a referência reativa `total` com o valor calculado
 const loadTotal = () => {
   try {
     const imoveis = JSON.parse(localStorage.getItem('imoveis') || '[]')
@@ -25,11 +27,13 @@ const loadTotal = () => {
   }
 }
 
+// Ao montar, carrega o total e registra listeners para manter o valor atualizado
 onMounted(() => {
   loadTotal()
   window.addEventListener('storage', loadTotal)
   window.addEventListener('focus', loadTotal)
 })
+// Ao desmontar, remove os listeners registrados
 onUnmounted(() => {
   window.removeEventListener('storage', loadTotal)
   window.removeEventListener('focus', loadTotal)

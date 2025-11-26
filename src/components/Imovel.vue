@@ -28,7 +28,7 @@
       <div class="flex items-start justify-between gap-4">
         <div class="flex-1">
           <h3 class="text-lg font-bold text-base-content">{{ imovel.titulo }}</h3>
-          <p class="text-sm text-base-content/70 mt-1">{{ imovel.endereco }}</p>
+          <p class="text-sm text-base-content/70 mt-1">{{ displayAddress }}</p>
         </div>
 
         <div class="text-right">
@@ -68,7 +68,10 @@ const props = defineProps({
       tipo: 'Apartamento',
       transacao: 'Aluguel',
       preco: 0,
-      endereco: 'Endereço não informado',
+      endereco: '',
+      rua: '',
+      numero: '',
+      cidade: '',
       quartos: 0,
       banheiros: 0,
       area: 0,
@@ -82,17 +85,20 @@ const props = defineProps({
 
 const imovel = props.imovel
 
+// Formata o campo `preco` do imóvel para o formato de moeda BRL (pt-BR)
 const formattedPrice = computed(() => {
   const price = Number(imovel.preco || 0)
   // Formata em R$ 1.234,00 (pt-BR)
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)
 })
 
+// Retorna o sufixo de preço (por exemplo '/mês' para aluguel) dependendo de `imovel.transacao`
 const priceSuffix = computed(() => {
   if ((imovel.transacao || '').toLowerCase() === 'aluguel') return '/mês'
   return ''
 })
 
+// Define a classe CSS do badge conforme o status (alugado/disponível/outros)
 const statusClass = computed(() => {
   const s = (imovel.status || '').toLowerCase()
   if (s === 'alugado') return 'badge-error'
@@ -100,6 +106,7 @@ const statusClass = computed(() => {
   return 'badge-ghost'
 })
 
+// Retorna o intervalo de ocupação formatado (data início a data fim) se ambos existirem
 const occupiedRange = computed(() => {
   if (!imovel.dataInicioOcupacao || !imovel.dataFimOcupacao) return ''
   try {
@@ -110,6 +117,19 @@ const occupiedRange = computed(() => {
   } catch (e) {
     return ''
   }
+})
+
+// Retorna um endereço legível, preferindo os campos 'rua', 'numero', 'cidade'
+// e fazendo fallback para `imovel.endereco` caso os campos estruturados sejam ausentes
+const displayAddress = computed(() => {
+  // Prefira campos estruturados (rua/numero/cidade); fallback para a string 'endereco'
+  const rua = (imovel.rua || '').toString().trim();
+  const numero = (imovel.numero || '').toString().trim();
+  const cidade = (imovel.cidade || '').toString().trim();
+  if (rua || numero || cidade) {
+    return `${rua}${numero ? ', ' + numero : ''}${cidade ? ', ' + cidade : ''}`.replace(/(^,\s+|\s+,\s+$)/g, '').trim();
+  }
+  return imovel.endereco || 'Endereço não informado';
 })
 </script>
 

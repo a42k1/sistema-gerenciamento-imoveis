@@ -2,13 +2,13 @@
 <template>
     <div class="min-h-screen bg-base-200 py-12 px-4">
         <div class="max-w-4xl mx-auto">
-            <!-- Header -->
+            <!-- Cabeçalho -->
             <div class="mb-8">
                 <h1 class="text-4xl font-bold text-base-content mb-2">Cadastrar Novo Imóvel</h1>
                 <p class="text-base-content/70">Preencha todos os dados abaixo para adicionar um novo imóvel ao seu sistema</p>
             </div>
 
-            <!-- Form Card -->
+            <!-- Card do formulário -->
             <form @submit.prevent="handleSubmit" class="card bg-base-100 shadow-xl">
                 <div class="card-body">
                     <div class="form-grid">
@@ -56,12 +56,7 @@
               </label>
                 <input id="preco" type="number" v-model="formData.preco" placeholder="Ex: 250000" class="input input-bordered w-full" required/>
             </div>
-      
-            <!-- Condomínio, IPTU, Status -->
-            <!-- Removidos campos opcionais: condominio, iptu e status para simplificar o formulário -->
-      
-            <!-- Removidos campos de datas e status para simplificação -->
-      
+
             <!-- Características -->
             <h3 class="col-span-full text-lg font-bold text-base-content border-b border-base-300 pb-3 mt-6">Características</h3>
             <div class="form-control">
@@ -81,30 +76,26 @@
                 <span class="label-text font-semibold">Banheiros</span>
               </label>
                 <input id="banheiros" type="number" v-model="formData.banheiros" placeholder="Ex: 1" class="input input-bordered w-full" required/>
-            </div>
-            <!-- Vagas removido para simplificar -->
-      
-            <!-- Recursos opcionais removidos para manter apenas os campos essenciais -->
-      
+            </div>     
             <!-- Endereço -->
             <h3 class="col-span-full text-lg font-bold text-base-content border-b border-base-300 pb-3 mt-6">Endereço</h3>
             <div class="form-control col-span-full">
               <label class="label">
                 <span class="label-text font-semibold">Rua / Logradouro</span>
               </label>
-                <input id="rua" v-model="addressParts.rua" placeholder="Ex: Rua das Flores" class="input input-bordered w-full" required/>
+                <input id="rua" v-model="formData.rua" placeholder="Ex: Rua das Flores" class="input input-bordered w-full" required/>
             </div>
             <div class="form-control">
               <label class="label">
                 <span class="label-text font-semibold">Número</span>
               </label>
-                <input id="numero" v-model="addressParts.numero" placeholder="Ex: 123" class="input input-bordered w-full" />
+                <input id="numero" v-model="formData.numero" placeholder="Ex: 123" class="input input-bordered w-full" />
             </div>
             <div class="form-control">
               <label class="label">
                 <span class="label-text font-semibold">Cidade</span>
               </label>
-                <input id="cidade" v-model="addressParts.cidade" placeholder="Ex: São Paulo" class="input input-bordered w-full" required/>
+                <input id="cidade" v-model="formData.cidade" placeholder="Ex: São Paulo" class="input input-bordered w-full" required/>
             </div>
       
             <!-- Mídia -->
@@ -118,7 +109,7 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Botões de ação -->
                 <div class="card-actions justify-end p-6 border-t border-base-300">
                     <button type="button" class="btn btn-ghost">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Cadastrar Imóvel</button>
@@ -153,60 +144,44 @@ const defaultValues = {
   tipo: 'Apartamento',
   transacao: 'Venda',
   preco: '',
-  endereco: '',
   quartos: 0,
   banheiros: 1,
   area: 0,
   descricao: '',
-  imagem: ''
-};
-
-const formData = ref({ ...defaultValues });
-const addressParts = ref({
+  imagem: '',
   rua: '',
   numero: '',
   cidade: ''
-});
+};
 
+const formData = ref({ ...defaultValues });
+
+// Inicializa o formulário com valores padrão ou com os dados do imóvel passado via props
+// Usa spread para garantir que campos ausentes em imovel recebam os valores padrão
 const initForm = () => {
   if (props.isEdit && props.imovel) {
-    formData.value = { ...props.imovel };
-    
-    // Parse address
-    if (formData.value.endereco) {
-      const parts = formData.value.endereco.split(',');
-      addressParts.value.rua = parts[0]?.trim() || '';
-      addressParts.value.numero = parts[1]?.trim() || '';
-      addressParts.value.cidade = parts[2]?.trim() || '';
-    }
+    formData.value = { ...defaultValues, ...props.imovel };
   } else {
     formData.value = { ...defaultValues };
-    addressParts.value = { rua: '', numero: '', cidade: '' };
   }
 };
 
 watch(() => props.imovel, initForm, { immediate: true });
 
-// Sem campos condicionais para datas
-
-const updateAddress = () => {
-  const { rua, numero, cidade } = addressParts.value;
-  formData.value.endereco = `${rua}${numero ? ', ' + numero : ''}${cidade ? ', ' + cidade : ''}`;
-};
-
-
 const router = useRouter();
 
+// Prepara o objeto do imóvel (`newImovel`) a partir de `formData` e salva no localStorage
 const handleSubmit = () => {
     console.log('Formulário enviado:', formData.value);
 
     // Prepara o imóvel para salvar
+    // Salva campos de endereço separadamente (não é necessário compor a string 'endereco')
     const newImovel = {
       ...formData.value,
-      id: Date.now(),
-      endereco: formData.value.endereco || '',
-      imagem: formData.value.imagem || ''
+      id: Date.now()
     };
+    // Garante que a string antiga 'endereco' não seja salva; armazenamos 'rua', 'numero' e 'cidade' separadamente
+    if (newImovel.endereco) delete newImovel.endereco;
 
     // Recupera lista do localStorage e adiciona o novo imóvel
     try {
@@ -224,11 +199,13 @@ const handleSubmit = () => {
     router.push('/');
 };
 
-// Read file and store as data URL in formData.imagem
+// Lê o arquivo e armazena como data URL em formData.imagem
+// Lê um arquivo de imagem selecionado pelo usuário, converte para data URL (base64)
+// e armazena em `formData.imagem` para preview e salvamento
 const handleFileChange = async (event) => {
   const file = event.target.files && event.target.files[0];
   if (!file) return;
-  // Basic size guard (optional): limit to 2MB
+  // Verificação básica de tamanho (opcional): limite de 2MB
   const sizeLimit = 2 * 1024 * 1024;
   if (file.size > sizeLimit) {
     msg.value = 'Imagem muito grande, limite de 2MB';
@@ -236,15 +213,14 @@ const handleFileChange = async (event) => {
     return;
   }
   const reader = new FileReader();
+  // Quando a leitura for concluída, armazena a imagem em base64 no formData para preview/salvamento
   reader.onload = (e) => {
     formData.value.imagem = e.target.result;
   };
   reader.readAsDataURL(file);
 };
 
-
-
-watch(addressParts, updateAddress, { deep: true });
+// A string 'endereco' não é usada; armazenamos 'rua', 'numero' e 'cidade' separadamente.
 
 </script>
 
