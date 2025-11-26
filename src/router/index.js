@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('@/views/Dashboard.vue')
+      component: () => import('@/views/dashboard.vue')
     },
     {
       path: '/novo-imovel',
