@@ -16,7 +16,7 @@ const router = createRouter({
     {
       path: '/novo-imovel',
       name: 'novo-imovel',
-      component: () => import('@/components/FormularioImoveis.vue')
+      component: () => import('@/views/cadastrarImovel.vue')
     }
   ],
 })

@@ -1,5 +1,5 @@
-
 <template>
+  <!-- Fomúmlário de cadastro de imóveis -->
     <div class="min-h-screen bg-base-200 py-12 px-4">
         <div class="max-w-4xl mx-auto">
             <!-- Cabeçalho -->

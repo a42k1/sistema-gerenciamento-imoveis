@@ -1,4 +1,5 @@
 <template>
+  <!-- Card de imóvel na pagina home -->
   <div class="card w-full bg-base-100 shadow-lg overflow-hidden">
     <div class="relative">
       <figure class="w-full h-52 overflow-hidden">

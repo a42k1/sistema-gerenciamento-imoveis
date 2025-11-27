@@ -1,4 +1,5 @@
 <template>
+  <!-- Imóveis ativos no dashboard -->
   <div class="card card-compact bg-base-100 shadow-sm p-4">
     <div class="flex justify-between items-start">
       <div>

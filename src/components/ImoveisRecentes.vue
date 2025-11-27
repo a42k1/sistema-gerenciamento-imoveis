@@ -1,4 +1,5 @@
 <template>
+  <!-- Imóveis recentes no dashboard -->
   <div class="card bg-base-100 shadow-sm p-4">
     <div class="card-title">Imóveis</div>
     <div class="space-y-3 mt-2">
