@@ -1,14 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/dashboard.vue')
-    }
+      path: "/",
+      name: "home",
+      component: () => import("@/views/Dashboard.vue"),
+    },
   ],
-})
+});
 
-export default router
+export default router;
