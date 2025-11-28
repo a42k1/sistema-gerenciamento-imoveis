@@ -40,14 +40,15 @@
               <textarea id="descricao" v-model="formData.descricao" placeholder="Resumo curto do imóvel (opcional)" class="textarea textarea-bordered w-full h-20"></textarea>
             </div>
       
-            <!-- Transação e Preço -->
+            <!-- Status e Preço -->
             <div class="form-control">
               <label class="label">
-                <span class="label-text font-semibold">Tipo de Transação</span>
+                <span class="label-text font-semibold">O status do seu imóvel será</span>
               </label>
-                <select id="transacao" v-model="formData.transacao" class="select select-bordered w-full" required>
-                <option value="Venda">Venda</option>
-                <option value="Aluguel">Aluguel</option>
+                <select id="status" v-model="formData.status" class="select select-bordered w-full" required>
+                <option value="Disponivel">Disponível</option>
+                <option value="Alugado">Alugado</option>
+               <option value="Em Manutencao">Em Manutenção</option> 
               </select>
             </div>
             <div class="form-control">
@@ -142,7 +143,7 @@ const defaultValues = {
   id: Date.now(),
   titulo: '',
   tipo: 'Apartamento',
-  transacao: 'Venda',
+  status: 'Disponivel',
   preco: '',
   quartos: 0,
   banheiros: 1,
@@ -156,8 +157,6 @@ const defaultValues = {
 
 const formData = ref({ ...defaultValues });
 
-// Inicializa o formulário com valores padrão ou com os dados do imóvel passado via props
-// Usa spread para garantir que campos ausentes em imovel recebam os valores padrão
 const initForm = () => {
   if (props.isEdit && props.imovel) {
     formData.value = { ...defaultValues, ...props.imovel };
@@ -170,20 +169,16 @@ watch(() => props.imovel, initForm, { immediate: true });
 
 const router = useRouter();
 
-// Prepara o objeto do imóvel (`newImovel`) a partir de `formData` e salva no localStorage
 const handleSubmit = () => {
     console.log('Formulário enviado:', formData.value);
 
-    // Prepara o imóvel para salvar
-    // Salva campos de endereço separadamente (não é necessário compor a string 'endereco')
     const newImovel = {
       ...formData.value,
       id: Date.now()
     };
-    // Garante que a string antiga 'endereco' não seja salva; armazenamos 'rua', 'numero' e 'cidade' separadamente
+    
     if (newImovel.endereco) delete newImovel.endereco;
 
-    // Recupera lista do localStorage e adiciona o novo imóvel
     try {
       const stored = JSON.parse(localStorage.getItem('imoveis') || '[]');
       stored.push(newImovel);
@@ -195,17 +190,12 @@ const handleSubmit = () => {
     msg.value = 'Imóvel cadastrado com sucesso!';
     setTimeout(() => msg.value = "", 3000);
 
-    // Redireciona para a home para ver o imóvel listado
     router.push('/');
 };
 
-// Lê o arquivo e armazena como data URL em formData.imagem
-// Lê um arquivo de imagem selecionado pelo usuário, converte para data URL (base64)
-// e armazena em `formData.imagem` para preview e salvamento
 const handleFileChange = async (event) => {
   const file = event.target.files && event.target.files[0];
   if (!file) return;
-  // Verificação básica de tamanho (opcional): limite de 2MB
   const sizeLimit = 2 * 1024 * 1024;
   if (file.size > sizeLimit) {
     msg.value = 'Imagem muito grande, limite de 2MB';
@@ -213,14 +203,11 @@ const handleFileChange = async (event) => {
     return;
   }
   const reader = new FileReader();
-  // Quando a leitura for concluída, armazena a imagem em base64 no formData para preview/salvamento
   reader.onload = (e) => {
     formData.value.imagem = e.target.result;
   };
   reader.readAsDataURL(file);
 };
-
-// A string 'endereco' não é usada; armazenamos 'rua', 'numero' e 'cidade' separadamente.
 
 </script>
 
