@@ -130,14 +130,12 @@ const handleSubmit = () => {
     if (index !== -1) {
       imoveis[index] = formData.value;
       localStorage.setItem('imoveis', JSON.stringify(imoveis));
-      alert('Imóvel atualizado com sucesso!');
     }
   } else {
     // Adiciona um ID único e salva o novo imóvel
     const newImovel = { ...formData.value, id: Date.now() };
     imoveis.push(newImovel);
     localStorage.setItem('imoveis', JSON.stringify(imoveis));
-    alert('Imóvel cadastrado com sucesso!');
   }
 
   window.dispatchEvent(new Event('storage'));
