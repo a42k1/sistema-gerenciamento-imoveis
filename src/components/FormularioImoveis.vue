@@ -31,7 +31,7 @@
               <select v-model="formData.status" class="select select-bordered w-full" required>
                 <option>Disponível</option>
                 <option>Alugado</option>
-                <option>Em Negociação</option>
+                <option>Em Manutenção</option>
               </select>
             </div>
             
@@ -56,7 +56,7 @@
               <input type="number" v-model.number="formData.area" class="input input-bordered w-full" min="0" required />
             </div>
 
-            <!-- Descrição (COM ESTILO ESPECÍFICO E ISOLADO) -->
+            <!-- Descrição -->
             <div class="description-field">
               <label class="label">
                 <span class="label-text font-semibold">Descrição</span>
@@ -107,7 +107,7 @@ onMounted(() => {
     if (imovelParaEditar) {
       formData.value = { ...imovelParaEditar };
     } else {
-      alert('Imóvel não encontrado!');
+      // Se não encontrar, redireciona, mas sem alerta.
       router.push('/');
     }
   } else {

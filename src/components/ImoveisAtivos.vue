@@ -5,7 +5,7 @@
       <div>
         <div class="text-sm font-medium text-base-content/70">Imóveis Ativos</div>
         <div class="text-2xl font-bold">{{ activeCount }}</div>
-        <div class="text-sm text-base-content/60">Quantidade de imóveis disponíveis</div>
+        <div class="text-sm text-base-content/60">Imóveis disponíveis e prontos para negócio</div>
       </div>
       <div class="text-3xl text-base-content/30"></div>
     </div>
@@ -17,28 +17,29 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const activeCountRef = ref(0)
 
-// Carrega a quantidade de imóveis ativos (não estão 'Alugado') a partir do localStorage
-// Atualiza a referência reativa `activeCountRef` com o total
+// Carrega a quantidade de imóveis ativos e atualiza a referência `activeCountRef`.
 const loadActiveCount = () => {
   try {
     const imoveis = JSON.parse(localStorage.getItem('imoveis') || '[]')
-    // Conta imóveis com status diferente de 'Alugado' (status vazio -> disponível)
+    // Conta apenas os imóveis que NÃO estão 'Alugado' e NEM 'Em Manutenção'.
+    // Um status vazio ou diferente (ex: 'Disponível') é considerado ativo.
     activeCountRef.value = imoveis.filter(i => { 
       const s = (i.status || '').toString().toLowerCase();
-      return s !== 'alugado';
+      return s !== 'alugado' && s !== 'em manutenção';
     }).length
   } catch (e) {
     activeCountRef.value = 0
   }
 }
 
-// Ao montar, carrega a contagem e registra listeners para manter a contagem sincronizada
+// Ao montar, carrega a contagem e registra listeners para manter o valor sincronizado.
 onMounted(() => {
   loadActiveCount()
   window.addEventListener('storage', loadActiveCount)
   window.addEventListener('focus', loadActiveCount)
 })
-// Ao desmontar, remove os listeners registrados
+
+// Ao desmontar, remove os listeners para evitar memory leaks.
 onUnmounted(() => {
   window.removeEventListener('storage', loadActiveCount)
   window.removeEventListener('focus', loadActiveCount)
