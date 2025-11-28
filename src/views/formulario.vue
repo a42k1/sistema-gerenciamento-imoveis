@@ -1,14 +1,7 @@
 <template>
-  <FormularioImoveis :imovel-id="id" />
+  <FormularioImoveis />
 </template>
 
 <script setup>
 import FormularioImoveis from '@/components/FormularioImoveis.vue'
-
-defineProps({
-  id: {
-    type: String,
-    default: null
-  }
-})
 </script>

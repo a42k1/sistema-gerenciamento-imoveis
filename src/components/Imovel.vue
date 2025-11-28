@@ -1,6 +1,6 @@
 <template>
   <!-- Card de imóvel que aparecerá na pagina home -->
-  <div class="card w-full bg-base-100 shadow-lg overflow-hidden">
+  <router-link :to="{ name: 'editar-imovel', params: { id: imovel.id } }" class="card w-full bg-base-100 shadow-lg overflow-hidden transition-shadow duration-300 hover:shadow-2xl cursor-pointer">
     <div class="relative">
       <figure class="w-full h-52 overflow-hidden">
         <template v-if="imovel.imagem">
@@ -55,7 +55,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script setup>

@@ -10,7 +10,7 @@
                 <ul class="menu menu-horizontal px-1">
                     <li><router-link to="/">Home</router-link></li>
                     <li><router-link to="/dashboard">Dashboard</router-link></li>
-                    <li><router-link to="/novo-imovel">Cadastrar Novo Imóvel</router-link></li>
+                    <li><router-link to="/cadastrar-imovel">Cadastrar Novo Imóvel</router-link></li>
                 </ul>
             </div>
         </div>

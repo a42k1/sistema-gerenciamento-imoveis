@@ -14,9 +14,15 @@ const router = createRouter({
       component: () => import('@/views/dashboard.vue')
     },
     {
-      path: '/novo-imovel',
-      name: 'novo-imovel',
-      component: () => import('@/views/cadastrarImovel.vue')
+      path: '/cadastrar-imovel',
+      name: 'cadastrar-imovel',
+      component: () => import('@/views/formulario.vue')
+    },
+    {
+      path: '/editar-imovel/:id',
+      name: 'editar-imovel',
+      component: () => import('@/views/formulario.vue'),
+      props:true
     }
   ],
 })
